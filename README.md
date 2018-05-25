@@ -1,6 +1,10 @@
-# Structured Import (Javascript)
+# Structured Import (JavaScript)
 
-Structured import for humans.
+Structured import for humans (written in JavaScript).
+
+![Quick, easy structured import app](structured_import_for_humans.gif)
+
+**Please note:** this app will soon be replaced with an improved version written in angular. This newer app is available [here](https://github.com/fhightower-tc/structured-import-app).
 
 ## Build App For Release
 
@@ -8,7 +12,7 @@ Structured import for humans.
 make pack
 ```
 
-This will package the app as `Structured_Import.zip`.
+This will package the app as `TCS_-_Structured_Import.zip`.
 
 ## Deploy
 
