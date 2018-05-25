@@ -1,0 +1,11 @@
+{
+    "allowOnDemand": true,
+    "displayName": "Structured Import (JavaScript)",
+    "languageVersion": "JS",
+    "params": [],
+    "programIcon": "spaces-icon-import",
+    "programLanguage": "none",
+    "programVersion": "0.1.0",
+    "runtimeContext": [],
+    "runtimeLevel": "SpaceOrganization"
+}

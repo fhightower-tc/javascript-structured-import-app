@@ -1,0 +1,164 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Structured Import for Humans</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- ThreatConnect scripts -->
+        <script type="text/javascript" src="./js/tc/libs/core.js"></script>
+        <script type="text/javascript" src="./js/tc/libs/sha256.js"></script>
+        <script type="text/javascript" src="./js/tc/libs/hmac.js"></script>
+        <script type="text/javascript" src="./js/tc/libs/enc-base64.js"></script>
+
+        <!-- Uncomment the line below to use the master branch of the TC JS SDK -->
+        <!-- <script type="text/javascript" src="https://cdn.rawgit.com/ThreatConnect-Inc/threatconnect-javascript/master/threatconnect.js"></script> -->
+        <script type="text/javascript" src="./js/tc/threatconnect.js"></script>
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+        <!-- typeahead -->
+        <script type="text/javascript" src="./js/vendor/typeahead.bundle.js"></script>
+
+        <!-- jQuery growl -->
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.4.1/jquery.jgrowl.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.4.1/jquery.jgrowl.min.js"></script>
+
+        <!-- Zurb Foundation imports -->
+        <script src="https://cdn.jsdelivr.net/foundation/6.2.4/foundation.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.4/foundation.min.css">
+
+        <!-- Vue.js -->
+        <script src="https://unpkg.com/vue"></script>
+
+        <!-- FontAwesome Icons CSS -->
+        <link rel="stylesheet" href="https://opensource.keycdn.com/fontawesome/4.7.0/font-awesome.min.css" integrity="sha384-dNpIIXE8U05kAbPhy3G1cz+yZmTzA6CY8Vg/u2L9xRnHjJiAK76m2BIEaSEV+/aU" crossorigin="anonymous">
+
+        <!-- Stylesheets -->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet">
+        <link rel="stylesheet" href="styles/structured-import.css">
+    </head>
+    <body>
+        <!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
+
+        <div id="app-content" v-if="visible">
+            <div id="phaseZero" v-if="phase === 0">
+                <div v-if="!loadingPhaseOne">
+                    <div class="small-9 medium-9 large-9 float-left well">
+                        <div>
+                            <textarea id="contentTextarea" rows="27" placeholder='Paste structured content here' v-model="rawContent"></textarea>
+                            <input type="text" v-model="splitString" placeholder="Enter a string on which you would like to split the content">
+                            <div class="float-right small-3 medium-3 large-3">
+                                <a href="#0" class="button float-right" v-on:click="startPhaseOne" id="phase-one-next" style="width: 50%;"> <strong>Next &nbsp;&nbsp;></strong></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="phase-zero-right" class="small-3 medium-3 large-3 float-right">
+                        <!-- Section for find and replace functionality -->
+                        <div id="find-and-replace" class="well small-11 medium-11 large-11 float-center">
+                            <div class="card-section">
+                                <label>Find all: {{ findCount }}<input id="find-value" class="focused-input" type="text" v-model="find"></label>
+                                <label>Replace with: <input id="replace-value" class="focused-input" type="text" v-model="replace"></label>
+
+                                <button type="button" class="secondary button float-right" v-on:click="findAndReplace">Find & replace</button>
+                                <!-- <span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover='false' tabindex=1 title="This automatically refangs indicators that have been defanged using common defanging techniques.">
+                                    <button type="button" class="button secondary" onclick="takeAction()">
+                                        <i class="fa fa-hand-o-left" aria-hidden="true"></i> Quick-refang
+                                    </button>
+                                </span> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="small-12 medium-12 large-12 clearfix"></div>
+
+                    <br><br>
+                </div>
+
+                <div v-if="loadingPhaseOne">
+                  <center>
+                    <div id="loading-div">
+                      <!-- <img src="./styles/loading.gif"> -->
+                      <br/>
+                      <h3>Processing...</h3>
+                    </div>
+                  </center>
+                </div>
+            </div> <!-- end phase-zero -->
+
+            <div id="phaseOne" v-if='phase === 1'>
+                <div class="float-right large-3 medium-4 small-5">
+                    <form id='owner-typeahead' class="float-left">
+                        <input id="owner-typeahead-input" class='typeahead tt-query focused-input' type='text' placeholder='Start typing an owner...' title='Start typing an owner' autocomplete='off' spellcheck='false' />
+                    </form>
+                    <button class="button" v-on:click="createContent">Create!</button>
+                    <!-- <label><input type="checkbox" v-model="removeAfterCreated">Remove rows once created</label> -->
+                </div>
+                <div class="clearfix"></div>
+                <b>{{ contentArray.length }} active lines</b>
+                <table>
+                    <tr>
+                        <td v-for="item in contentArray[0]">
+                            <select>
+                                <option value="" selected></option>
+                                <option value="address">indicator:IP</option>
+                                <option value="emailaddress">indicator:EMAIL ADDRESS</option>
+                                <option value="file">indicator:FILE</option>
+                                <option value="host">indicator:HOST</option>
+                                <option value="url">indicator:URL</option>
+                                <option value="tag">TAG</option>
+                                <option value="attribute">ATTRIBUTE</option>
+                                <option value="fileSize">file:SIZE</option>
+                                <option value="fileName">file:NAME</option>
+                            </select>
+                            <input class="supplementalInput" type="text" placeholder="Attribute type (only required if you are mapping this column to an attribute)">
+                        </td>
+                        <td>Make Inactive <span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover='false' tabindex=1 title="You can remove a row so that it is not processed"><i class="fa fa-question"></i></span></td>
+                    </tr>
+                    <tr v-for="entry in contentArray">
+                        <td v-for="item in entry">{{ item }}</td>
+                        <!-- <td><button class="button secondary" title="Make this row inactive" v-on:click="changeActiveStatus(entry, false)"></button></td> -->
+                        <td><i v-on:click="changeActiveStatus(entry, false)" title="Make this row inactive" class="fa fa-chevron-down"></i></td>
+                    </tr>
+                </table>
+
+                <p><b>{{ inactiveContentArray.length }} inactive lines</b> - Nothing from these lines will be created</p>
+
+                <table>
+                    <tr v-for="entry in inactiveContentArray">
+                        <td v-for="item in entry">{{ item }}</td>
+                        <td><i v-on:click="changeActiveStatus(entry, true)" title="Make this row active" class="fa fa-chevron-up"></i></td>
+                    </tr>
+                </table>
+
+                <p><b>{{ poorlyFormattedLines.length }} malformed lines</b> - These lines do not have the same number of entries as the other lines</p>
+
+                <table>
+                    <tr v-for="entry in poorlyFormattedLines">
+                        <td v-for="item in entry">{{ item }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div> <!-- end app-content -->
+
+        <!-- App scripts here -->
+        <script type="text/javascript" src="./js/suggestionEngine.js"></script>
+        <script src="js/structuredImport.js"></script>
+
+        <script type="text/javascript">
+            // configure jgrowl to not show the [Close All] button when multiple growl messages are displayed
+            $.jGrowl.defaults.closer = false;
+
+            window.onload = function() {
+                STRUCTUREDIMPORT.startApp();
+            }
+        </script>
+    </body>
+</html>

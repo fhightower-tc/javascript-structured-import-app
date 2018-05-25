@@ -1,0 +1,90 @@
+/*
+
+COLOR KEY
+
+  PRIMARY
+
+  #f26724 - TC Orange
+  #646469 - TC Dark Grey
+  #07213a - TC Blue
+
+
+  SECONDARY
+
+  #06213b - TC Dark Blue
+  #2878b7 - TC Light Blue
+  #cccbcb - TC Light Grey
+
+*/
+
+/* Stylings for creating vertical spaces. */
+.vspace-xs {
+    margin-top: 1%;
+}
+
+.vspace-sm {
+    margin-top: 2%;
+}
+
+.vspace-md {
+    margin-top: 3%;
+}
+
+.vspace-lg {
+    margin-top: 5%;
+}
+/* End stylings for creating vertical spaces. */
+
+/* Adding styling for growl messages. */
+.success-growl {
+    background-color: #58b957;
+    font-size: 1.5em;
+}
+
+.warning-growl {
+    background-color: #f2ae43;
+    font-size: 1.5em;
+    color: black;
+}
+
+.failure-growl {
+    background-color: #db524b;
+    font-size: 1.5em;
+}
+/* End stylings for growl messages. */
+
+/* CSS FOR TWITTER TYPE-AHEAD */
+.typeahead, .tt-query, .tt-hint {
+    border-radius: 4px;
+    font-size: 22px;
+    /*width: 150%;*/
+}
+.tt-hint {
+    color: #999999;
+}
+.tt-menu {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    margin-top: -0.9em;
+    padding: 0.6em 0;
+    /*width: 24em;*/
+}
+.tt-suggestion {
+    font-size: 22px;
+    padding: 0.25em 20px;
+}
+.tt-suggestion:hover {
+    cursor: pointer;
+    background-color: #767676;
+    color: #FFFFFF;
+}
+.tt-suggestion p {
+    margin: 0;
+}
+/* END CSS FOR TWITTER TYPE-AHEAD. */
+
+i:hover {
+    cursor: pointer;
+}
