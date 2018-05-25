@@ -240,10 +240,11 @@ var STRUCTUREDIMPORT = new Vue({
                             indicators.commitAttribute(attributes[i]);
                         }
                     }
-                    
+
                     if (tags) {
                         for (var i = tags.length - 1; i >= 0; i--) {
-                            indicators.commitTag(tag);
+                            indicators.commitTag(tags[i]);
+                            indicators.resultStart(0);
                         }
                     }
 
