@@ -1,5 +1,7 @@
 # Structured Import (JavaScript)
 
+**NOTE:** A maintained version of this app is here: https://gitlab.com/fhightower/structured-import-app .
+
 Structured import for humans (written in JavaScript).
 
 ![Quick, easy structured import app](structured_import_for_humans.gif)
